@@ -111,3 +111,25 @@ See [ASSIGNMENT.md](./ASSIGNMENT.md) for full submission requirements. At minimu
 - **Bug report** — what you found, where in the code, and why it's a bug (not just symptoms)
 - **At least one fix** — with a note on your approach
 - **`PATCH /tasks/:id/assign` implementation** — plus a short explanation of any design decisions (validation, edge cases, etc.)
+
+---
+
+## Submission
+
+**Live deployment:** http://16.171.36.161:3000
+
+**New endpoint implemented:**
+| Method | Path | Description |
+|---|---|---|
+| PATCH | `/tasks/:id/assign` | Assign a task to a user (`{ "assignee": "string" }`) |
+
+See [`task-api/BUGS.md`](task-api/BUGS.md) for the bug report (4 bugs found and fixed)
+and [`task-api/NOTES.md`](task-api/NOTES.md) for submission notes on testing,
+surprises, and production questions.
+
+Run tests with:
+```
+cd task-api
+npm test
+npm run coverage
+```
