@@ -4,6 +4,24 @@ const taskRoutes = require('./routes/tasks');
 const app = express();
 
 app.use(express.json());
+
+app.get('/', (req, res) => {
+  res.json({
+    message: 'Task Manager API is running',
+    endpoints: {
+      listTasks: 'GET /tasks',
+      filterByStatus: 'GET /tasks?status=todo',
+      paginate: 'GET /tasks?page=1&limit=10',
+      createTask: 'POST /tasks',
+      updateTask: 'PUT /tasks/:id',
+      deleteTask: 'DELETE /tasks/:id',
+      completeTask: 'PATCH /tasks/:id/complete',
+      assignTask: 'PATCH /tasks/:id/assign',
+      stats: 'GET /tasks/stats',
+    },
+  });
+});
+
 app.use('/tasks', taskRoutes);
 
 app.use((err, req, res, next) => {

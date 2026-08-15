@@ -6,6 +6,15 @@ beforeEach(() => {
   taskService._reset();
 });
 
+describe('GET /', () => {
+  test('returns a welcome message with API info', async () => {
+    const res = await request(app).get('/');
+    expect(res.status).toBe(200);
+    expect(res.body.message).toBeDefined();
+    expect(res.body.endpoints).toBeDefined();
+  });
+});
+
 describe('POST /tasks', () => {
   test('creates a task and returns 201 with the task body', async () => {
     const res = await request(app)
