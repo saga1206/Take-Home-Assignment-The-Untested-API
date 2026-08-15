@@ -6,7 +6,7 @@ const getAll = () => [...tasks];
 
 const findById = (id) => tasks.find((t) => t.id === id);
 
-const getByStatus = (status) => tasks.filter((t) => t.status.includes(status));
+const getByStatus = (status) => tasks.filter((t) => t.status === status);
 
 const getPaginated = (page, limit) => {
   const offset = (page - 1) * limit;
@@ -48,7 +48,13 @@ const update = (id, fields) => {
   const index = tasks.findIndex((t) => t.id === id);
   if (index === -1) return null;
 
-  const updated = { ...tasks[index], ...fields };
+  const { title, description, status, priority, dueDate, completedAt } = fields;
+  const patch = Object.fromEntries(
+    Object.entries({ title, description, status, priority, dueDate, completedAt })
+      .filter(([, v]) => v !== undefined)
+  );
+
+  const updated = { ...tasks[index], ...patch };
   tasks[index] = updated;
   return updated;
 };
@@ -67,7 +73,6 @@ const completeTask = (id) => {
 
   const updated = {
     ...task,
-    priority: 'medium',
     status: 'done',
     completedAt: new Date().toISOString(),
   };

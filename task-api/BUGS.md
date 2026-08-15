@@ -1,8 +1,8 @@
 # Bug Report
 
 Found via unit tests (`tests/taskService.test.js`) and integration tests
-(`tests/tasks.routes.test.js`). All four are reproducible — see the referenced
-test names for exact repro steps.
+(`tests/tasks.routes.test.js`). All four were reproducible via failing tests
+and have since been fixed — all 56 tests now pass.
 
 ---
 
@@ -32,6 +32,8 @@ const getPaginated = (page, limit) => {
 };
 ```
 
+**Status:** ✅ Fixed.
+
 ---
 
 ## 2. `getByStatus` does substring matching instead of exact matching
@@ -53,6 +55,8 @@ substring query returned 2 results instead of 0.
 const getByStatus = (status) => tasks.filter((t) => t.status === status);
 ```
 
+**Status:** ✅ Fixed (see `src/services/taskService.js`).
+
 ---
 
 ## 3. `update` has no field whitelist — clients can overwrite `id` and `createdAt`
@@ -63,9 +67,9 @@ const getByStatus = (status) => tasks.filter((t) => t.status === status);
 (`title`, `description`, `status`, `priority`, `dueDate`, `completedAt`).
 `id` and `createdAt` should be immutable once a task is created.
 
-**Actual:** `update()` does `{ ...tasks[index], ...fields }` with no
+**Actual:** `update()` did `{ ...tasks[index], ...fields }` with no
 filtering, so sending `{ "id": "hacked-id" }` in a `PUT` body silently
-changes the task's id. This breaks any future lookup on the original id and
+changed the task's id. This broke any future lookup on the original id and
 could let a client collide with another task's id.
 
 **How discovered:** Unit test sending `id` and `createdAt` in the update
@@ -89,6 +93,8 @@ const update = (id, fields) => {
 };
 ```
 
+**Status:** ✅ Fixed (see `src/services/taskService.js`).
+
 ---
 
 ## 4. `completeTask` resets `priority` to `'medium'` instead of preserving it
@@ -98,9 +104,9 @@ const update = (id, fields) => {
 **Expected:** Marking a task complete should only change `status` and
 `completedAt`. Priority is unrelated to completion and should be left as-is.
 
-**Actual:** `completeTask` unconditionally sets `priority: 'medium'`,
-silently downgrading a `high`-priority task on completion. This looks like a
-copy-paste leftover from a default-value object rather than intentional
+**Actual:** `completeTask` unconditionally set `priority: 'medium'`,
+silently downgrading a `high`-priority task on completion. This looked like
+a copy-paste leftover from a default-value object rather than intentional
 behavior.
 
 **How discovered:** Unit test completing a `high`-priority task and
@@ -123,3 +129,5 @@ const completeTask = (id) => {
   return updated;
 };
 ```
+
+**Status:** ✅ Fixed (see `src/services/taskService.js`).
